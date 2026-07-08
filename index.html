@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Datalake Solutions LLC — Modern Data Engineering</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -61,6 +61,7 @@
     .nav-links { display: flex; gap: 2rem; list-style: none; }
     .nav-links a { color: var(--muted); text-decoration: none; font-size: .875rem; font-weight: 500; transition: color .2s; }
     .nav-links a:hover { color: var(--text); }
+    .mobile-only { display: none; }
     .nav-right { display: flex; align-items: center; gap: 1rem; }
     .nav-phone { font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: var(--muted); }
     .nav-cta { background: var(--accent); color: #fff; padding: .5rem 1.3rem; border-radius: 8px; font-size: .875rem; font-weight: 600; text-decoration: none; transition: all .2s; }
@@ -130,6 +131,7 @@
     /* ── CODE SHOWCASE ── */
     #code-showcase { padding: 7rem 6%; background: linear-gradient(180deg, transparent, rgba(59,130,246,.025) 50%, transparent); }
     .code-inner { display: grid; grid-template-columns: 1fr 1.1fr; gap: 4rem; align-items: center; }
+    .code-inner > *, .stack-inner > * { min-width: 0; }
     .code-tabs { display: flex; gap: .4rem; margin-bottom: 0; }
     .code-tab {
       padding: .5rem 1rem; border-radius: 8px 8px 0 0; font-size: .78rem; font-weight: 600;
@@ -241,9 +243,103 @@
     .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
+    /* ── MOBILE NAV TOGGLE ── */
+    .nav-toggle { display: none; background: none; border: 1px solid var(--border); border-radius: 8px; padding: .5rem .6rem; color: var(--text); cursor: none; }
+    .nav-toggle svg { display: block; }
+
+    /* ── TOUCH DEVICES: no custom cursor / spotlight ── */
+    @media (hover: none), (pointer: coarse) {
+      body { cursor: auto; }
+      #cursor-dot, #cursor-ring, #spotlight { display: none; }
+      body a, body button, .service-card, .tech-pill, .why-card, .contact-card, .code-tab,
+      .btn-primary, .btn-ghost, .modal-close, .nav-toggle { cursor: pointer; }
+      .service-card:hover, .why-card:hover, .tech-pill:hover { transform: none; }
+    }
+
     /* ── RESPONSIVE ── */
-    @media(max-width:1024px){.stack-inner,.code-inner{grid-template-columns:1fr}.steps{grid-template-columns:repeat(3,1fr)}.stats-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:700px){.nav-links,.nav-phone{display:none}.steps{grid-template-columns:repeat(2,1fr)}.why-grid{grid-template-columns:1fr}.steps-line{display:none}.hero-metrics{gap:1.5rem}.tech-grid{grid-template-columns:repeat(3,1fr)}.cta-box{padding:3rem 1.5rem}.stats-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:1024px){
+      .stack-inner,.code-inner{grid-template-columns:1fr;gap:3rem}
+      .steps{grid-template-columns:repeat(3,1fr)}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:700px){
+      /* nav */
+      nav{padding:.75rem 5%}
+      .nav-phone,.nav-cta{display:none}
+      .nav-toggle{display:inline-flex}
+      .mobile-only{display:block}
+      .mobile-only a{color:var(--accent2);font-weight:700}
+      .nav-links{
+        display:flex;position:fixed;top:60px;left:0;right:0;z-index:99;
+        flex-direction:column;gap:0;padding:.4rem 0;
+        background:rgba(6,10,18,.97);backdrop-filter:blur(20px) saturate(180%);
+        border-bottom:1px solid var(--border);
+        opacity:0;visibility:hidden;transform:translateY(-8px);
+        transition:opacity .25s ease,transform .25s ease,visibility .25s;
+      }
+      nav.menu-open .nav-links{opacity:1;visibility:visible;transform:translateY(0)}
+      .nav-links a{display:block;padding:.85rem 6%;font-size:.95rem}
+
+      /* hero */
+      #hero{padding:6.5rem 5% 4rem;min-height:100svh}
+      h1{font-size:clamp(2.1rem,9.5vw,2.8rem)}
+      .hero-sub{font-size:.95rem;min-height:5.4em;margin:1.4rem auto 2rem}
+      .hero-btns{width:100%;max-width:340px;flex-direction:column;align-items:stretch}
+      .btn-primary,.btn-ghost{text-align:center}
+      .hero-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:1.6rem 2.5rem;margin-top:3rem}
+
+      /* sections: tighter padding */
+      #services,#code-showcase,#process,#why{padding:4.5rem 5%}
+      #stack,#stats,#cta{padding:4rem 5%}
+      .services-header,.process-header{margin-bottom:2.8rem}
+      .services-grid{grid-template-columns:1fr}
+      .service-card{padding:1.6rem}
+
+      /* code showcase */
+      .code-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+      .code-tabs::-webkit-scrollbar{display:none}
+      .code-tab{white-space:nowrap;flex-shrink:0;padding:.45rem .8rem;font-size:.72rem}
+      .code-body{padding:1rem;font-size:.7rem;line-height:1.65}
+
+      /* stack / process / stats / why */
+      .tech-grid{grid-template-columns:repeat(3,1fr)}
+      .steps{grid-template-columns:repeat(2,1fr);gap:1.5rem 1rem}
+      .steps-line{display:none}
+      .step{padding:0}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .stat-card{padding:1.8rem 1rem}
+      .stat-num{font-size:2.2rem}
+      .why-grid{grid-template-columns:1fr;margin-top:2.5rem}
+
+      /* cta */
+      .cta-box{padding:3rem 1.4rem}
+      .cta-box .hero-btns{margin:0 auto}
+      .contact-cards{flex-direction:column;align-items:stretch;max-width:340px;margin:2rem auto 0}
+      .contact-card{justify-content:flex-start}
+
+      /* modal: 16px inputs stop iOS auto-zoom */
+      .modal{padding:1.8rem 1.4rem;max-height:90dvh;overflow-y:auto}
+      .form-group input,.form-group textarea{font-size:16px}
+
+      /* floating button: clear the iPhone home indicator */
+      #float-contact{bottom:calc(1.1rem + env(safe-area-inset-bottom));right:1.1rem;padding:.75rem 1.2rem;font-size:.82rem}
+
+      /* footer */
+      footer{flex-direction:column;text-align:center;justify-content:center;padding:2rem 5% calc(2rem + env(safe-area-inset-bottom))}
+      .footer-right{flex-wrap:wrap;justify-content:center;gap:1rem 1.3rem}
+    }
+    @media(max-width:380px){
+      .tech-grid{grid-template-columns:repeat(2,1fr)}
+      h1{font-size:2rem}
+      nav{padding:.7rem 4%}
+      .logo{font-size:1rem;gap:.5rem}
+      .logo-mark{width:32px;height:32px;border-radius:8px}
+      .logo-mark svg{width:18px;height:18px}
+      .nav-links{top:54px}
+      .cta-box{padding:2.5rem 1rem}
+      .contact-card{padding:.85rem 1rem;font-size:.82rem}
+      .contact-card small{font-size:.65rem;word-break:break-all}
+    }
   </style>
 </head>
 <body>
@@ -290,10 +386,14 @@
     <li><a href="#stack">Stack</a></li>
     <li><a href="#process">Process</a></li>
     <li><a href="#why">Why Us</a></li>
+    <li class="mobile-only"><a href="#cta">Get in Touch →</a></li>
   </ul>
   <div class="nav-right">
     <span class="nav-phone">+383 48 514 871</span>
     <a href="#cta" class="nav-cta">Get in Touch</a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
   </div>
 </nav>
 
@@ -477,7 +577,7 @@ glue_db = aws.glue.CatalogDatabase(<span class="str">"silver_db"</span>,
 
 <span class="cm"># EMR Serverless Application</span>
 emr_app = aws.emrserverless.Application(<span class="str">"spark-app"</span>,
-    release_label=<span class="str">"emr-7.0.0"</span>,
+    release_label=<span class="str">"emr-7.14.0"</span>,
     type=<span class="str">"SPARK"</span>,
     name=<span class="str">"datalake-spark"</span>,
     auto_stop_configuration=aws.emrserverless.ApplicationAutoStopConfigurationArgs(
@@ -588,22 +688,38 @@ pulumi.export(<span class="str">"emr_app_id"</span>, emr_app.id)</pre></div>
 </footer>
 
 <script>
-/* ── CURSOR ── */
-const dot = document.getElementById('cursor-dot');
-const ring = document.getElementById('cursor-ring');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove', e=>{
-  mx=e.clientX; my=e.clientY;
-  dot.style.left=mx+'px'; dot.style.top=my+'px';
-  document.getElementById('spotlight').style.left=mx+'px';
-  document.getElementById('spotlight').style.top=my+'px';
-});
-function animRing(){
-  rx+=(mx-rx)*.13; ry+=(my-ry)*.13;
-  ring.style.left=rx+'px'; ring.style.top=ry+'px';
-  requestAnimationFrame(animRing);
+/* ── TOUCH DETECTION ── */
+const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+/* ── CURSOR (desktop only) ── */
+if(!isTouch){
+  const dot = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', e=>{
+    mx=e.clientX; my=e.clientY;
+    dot.style.left=mx+'px'; dot.style.top=my+'px';
+    document.getElementById('spotlight').style.left=mx+'px';
+    document.getElementById('spotlight').style.top=my+'px';
+  });
+  function animRing(){
+    rx+=(mx-rx)*.13; ry+=(my-ry)*.13;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
 }
-animRing();
+
+/* ── MOBILE MENU ── */
+const navEl=document.querySelector('nav'), navToggle=document.getElementById('nav-toggle');
+navToggle.addEventListener('click',()=>{
+  const open=navEl.classList.toggle('menu-open');
+  navToggle.setAttribute('aria-expanded',open);
+});
+document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>{
+  navEl.classList.remove('menu-open');
+  navToggle.setAttribute('aria-expanded','false');
+}));
 
 /* ── SCROLL PROGRESS ── */
 window.addEventListener('scroll', ()=>{
@@ -617,7 +733,8 @@ let W,H,pts=[];
 function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
 resize(); window.addEventListener('resize',resize);
 const COLORS=['#3b82f6','#06b6d4','#8b5cf6'];
-for(let i=0;i<80;i++) pts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.3,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,a:Math.random()*.6+.1,c:COLORS[Math.floor(Math.random()*3)]});
+const PT_COUNT = window.innerWidth < 768 ? 32 : 80;
+for(let i=0;i<PT_COUNT;i++) pts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.3,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,a:Math.random()*.6+.1,c:COLORS[Math.floor(Math.random()*3)]});
 function draw(){
   ctx.clearRect(0,0,W,H);
   for(let i=0;i<pts.length;i++){
@@ -638,7 +755,7 @@ draw();
 /* ── TYPEWRITER ── */
 const lines = [
   'We architect cloud-native data lakes on AWS — from raw ingestion to analytics-ready gold layers.',
-  'End-to-end pipelines with AWS Glue, EMR, Iceberg, Airflow, dbt, and Redshift Serverless.',
+  'End-to-end pipelines with AWS Glue, EMR, Iceberg, Airflow, dbt, Redshift, and Snowflake.',
   'Infrastructure as Code. SQL-first. Fully automated. Built to scale to petabytes.',
 ];
 let li=0,ci=0,tw=document.getElementById('typewriter'),del=false;
@@ -651,7 +768,7 @@ function type(){
 type();
 
 /* ── TICKER ── */
-const tickerItems=['AWS Glue','Apache Spark','Apache Iceberg','Redshift Serverless','Apache Airflow','dbt Core','Amazon Athena','S3 Datalake','Terraform','Pulumi','PySpark','AWS EMR','Glue Catalog','Lake Formation','Kinesis','Great Expectations','Delta Lake','AWS Secrets Manager','Kafka Streams','Flink'];
+const tickerItems=['AWS Glue','Apache Spark','Apache Iceberg','Redshift Serverless','Snowflake','Apache Airflow','dbt Core','Amazon Athena','S3 Datalake','Terraform','Pulumi','PySpark','AWS EMR','Glue Catalog','Lake Formation','Kinesis','Great Expectations','Delta Lake','AWS Secrets Manager','Kafka Streams','Flink'];
 const ticker=document.getElementById('ticker');
 [...tickerItems,...tickerItems].forEach(t=>{
   const el=document.createElement('div'); el.className='ticker-item';
@@ -702,6 +819,13 @@ const services=[
     color:'#0ea5e9',glow:'rgba(14,165,233,.08)',border:'rgba(14,165,233,.4)'
   },
   {
+    icon: `<div class="aws-icon" style="background:linear-gradient(135deg,#001a2e,#004a6e)">${awsIcon('#',`<line x1="20" y1="8" x2="20" y2="32" stroke="#29b5e8" stroke-width="2.2" stroke-linecap="round"/><line x1="9.6" y1="14" x2="30.4" y2="26" stroke="#29b5e8" stroke-width="2.2" stroke-linecap="round"/><line x1="30.4" y1="14" x2="9.6" y2="26" stroke="#29b5e8" stroke-width="2.2" stroke-linecap="round"/><path d="M16.5 9.5L20 13l3.5-3.5M16.5 30.5L20 27l3.5 3.5" stroke="#7dd3fc" stroke-width="1.6" fill="none" stroke-linecap="round"/><circle cx="20" cy="20" r="2.4" fill="#38bdf8"/>`)}</div>`,
+    title:'Cloud Data Warehousing',
+    desc:'Design, migrate and optimize warehouses on Amazon Redshift and Snowflake — dimensional modeling, workload tuning and cost control.',
+    tags:['Redshift','Snowflake','Warehouse Migration','RA3 / Serverless'],
+    color:'#29b5e8',glow:'rgba(41,181,232,.08)',border:'rgba(41,181,232,.4)'
+  },
+  {
     icon: `<div class="aws-icon" style="background:linear-gradient(135deg,#1a0a2e,#3b0d6e)">${awsIcon('#',`<rect x="9" y="9" width="9" height="9" rx="1.5" fill="#a78bfa" opacity=".7"/><rect x="22" y="9" width="9" height="9" rx="1.5" fill="#818cf8" opacity=".7"/><rect x="9" y="22" width="9" height="9" rx="1.5" fill="#818cf8" opacity=".7"/><rect x="22" y="22" width="9" height="9" rx="1.5" fill="#a78bfa" opacity=".7"/><line x1="18" y1="13.5" x2="22" y2="13.5" stroke="#c4b5fd" stroke-width="1.5"/><line x1="18" y1="26.5" x2="22" y2="26.5" stroke="#c4b5fd" stroke-width="1.5"/><line x1="13.5" y1="18" x2="13.5" y2="22" stroke="#c4b5fd" stroke-width="1.5"/><line x1="26.5" y1="18" x2="26.5" y2="22" stroke="#c4b5fd" stroke-width="1.5"/>`)}</div>`,
     title:'Infrastructure as Code',
     desc:'Provision all data infrastructure with Terraform and Pulumi — version-controlled, reproducible, fully automated deployments.',
@@ -749,6 +873,7 @@ const techs=[
   {svg:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><polygon points="12,3 21,8 21,16 12,21 3,16 3,8" fill="#fde68a" opacity=".25" stroke="#fbbf24" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="#f59e0b"/></svg>`,label:'Spark',color:'#f59e0b',glow:'rgba(245,158,11,.2)'},
   {svg:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 4C4 4 8 6 12 6C16 6 20 4 20 4V12C20 12 16 14 12 14C8 14 4 12 4 12Z" fill="#4ade80" opacity=".3" stroke="#22c55e" stroke-width="1.5"/><path d="M4 12C4 12 8 14 12 14C16 14 20 12 20 12V16C20 16 16 18 12 18C8 18 4 16 4 16Z" fill="#22c55e" opacity=".5"/><ellipse cx="12" cy="4" rx="8" ry="2" fill="#86efac"/></svg>`,label:'PySpark',color:'#22c55e',glow:'rgba(34,197,94,.2)'},
   {svg:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="10" width="18" height="10" rx="2" fill="#38bdf8" opacity=".2" stroke="#0ea5e9" stroke-width="1.5"/><path d="M3 10V8a2 2 0 012-2h14a2 2 0 012 2v2" stroke="#7dd3fc" stroke-width="1.5"/><line x1="8" y1="15" x2="16" y2="15" stroke="#38bdf8" stroke-width="1.5"/></svg>`,label:'Redshift',color:'#0ea5e9',glow:'rgba(14,165,233,.2)'},
+  {svg:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#29b5e8" stroke-width="1.6" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="21"/><line x1="4.2" y1="7.5" x2="19.8" y2="16.5"/><line x1="19.8" y1="7.5" x2="4.2" y2="16.5"/><path d="M9.5 4.5L12 7l2.5-2.5M9.5 19.5L12 17l2.5 2.5" stroke="#7dd3fc"/></svg>`,label:'Snowflake',color:'#29b5e8',glow:'rgba(41,181,232,.2)'},
   {svg:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#60a5fa" stroke-width="1.5" fill="none"/><path d="M12 8a4 4 0 014 4" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="2" fill="#3b82f6"/></svg>`,label:'Athena',color:'#3b82f6',glow:'rgba(59,130,246,.2)'},
   {svg:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="#a78bfa" stroke-width="1.5" fill="none"/><path d="M12 7 A5 5 0 0 1 17 12" stroke="#c4b5fd" stroke-width="2" stroke-linecap="round"/><path d="M15 10l2 2-2 2" stroke="#8b5cf6" stroke-width="1.5" fill="none"/></svg>`,label:'Airflow',color:'#8b5cf6',glow:'rgba(139,92,246,.2)'},
   {svg:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 20L12 4l7 16" stroke="#fb923c" stroke-width="1.8" stroke-linecap="round"/><path d="M7.5 14h9" stroke="#fdba74" stroke-width="1.5"/></svg>`,label:'dbt',color:'#f97316',glow:'rgba(249,115,22,.2)'},
